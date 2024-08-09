@@ -11,6 +11,9 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldProviderEnd;
+import net.minecraft.world.WorldProviderHell;
+import net.minecraft.world.WorldProviderSurface;
 import net.minecraft.world.chunk.IChunkProvider;
 
 import gregtech.api.GregTech_API;
@@ -114,11 +117,10 @@ public class GT_Worldgen_GT_Ore_Layer extends GT_Worldgen {
             // Return a special empty orevein
             return ORE_PLACED;
         }
-        if (!isGenerationAllowed(
-            aWorld,
-            aDimensionType,
-            ((aDimensionType == -1) && (this.mNether)) || ((aDimensionType == 0) && (this.mOverworld))
-                || ((aDimensionType == 1) && (this.mEnd)) ? aDimensionType : ~aDimensionType)) {
+        boolean allowed = ((aWorld.provider instanceof WorldProviderHell) && (this.mNether))
+            || ((aWorld.provider instanceof WorldProviderSurface) && (this.mOverworld))
+            || ((aWorld.provider instanceof WorldProviderEnd) && (this.mEnd));
+        if (!isGenerationAllowed(aWorld, aDimensionType, allowed ? aDimensionType : ~aDimensionType)) {
             // The following code can be used for debugging, but it spams in logs
             // if (debugOrevein) { GT_Log.out.println( "Wrong dimension" ); }
             return WRONG_DIMENSION;

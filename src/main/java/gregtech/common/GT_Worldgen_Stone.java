@@ -12,6 +12,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.common.DimensionManager;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.objects.XSTR;
@@ -81,8 +82,9 @@ public class GT_Worldgen_Stone extends GT_Worldgen_Ore {
         int aChunkZ, IChunkProvider aChunkGenerator, IChunkProvider aChunkProvider) {
         XSTR stoneRNG = new XSTR();
         ArrayList<ValidSeeds> stones = new ArrayList<>();
-
-        if (!isGenerationAllowed(aWorld, aDimensionType, this.mDimensionType)) {
+        boolean allowed = DimensionManager.getWorld(this.mDimensionType).provider.getClass()
+            == aWorld.provider.getClass();
+        if (!isGenerationAllowed(aWorld, aDimensionType, allowed ? aDimensionType : this.mDimensionType)) {
             return false;
         }
         if (!(this.mBiomeList.isEmpty() || this.mBiomeList.contains(aBiome))) {
